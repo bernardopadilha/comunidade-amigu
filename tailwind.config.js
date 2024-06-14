@@ -78,9 +78,13 @@ module.exports = {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
-
       fontFamily: {
         sans: 'Plus Jakarta Sans',
+      },
+      backgroundImage: {
+        body: "url('/background.png')",
+        login: "url('/stars.png')",
+        cardLogin: "url('/card-login.png')",
       },
     },
   },

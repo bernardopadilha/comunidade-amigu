@@ -1,6 +1,5 @@
-import { useState } from 'react'
-import { Avatar } from './Avatar'
-import { ThumbsUp, Trash } from 'lucide-react'
+import { Trash } from 'lucide-react'
+import { Button } from '../ui/button'
 
 interface CommentProps {
   content: string
@@ -8,12 +7,6 @@ interface CommentProps {
 }
 
 export function Comment({ content, onDeleteComment }: CommentProps) {
-  const [likeCount, setLikeCount] = useState(0)
-
-  function handleLikeComment() {
-    setLikeCount(likeCount + 1)
-  }
-
   function handleDeleteComment() {
     console.log('delete comment')
 
@@ -21,43 +14,37 @@ export function Comment({ content, onDeleteComment }: CommentProps) {
   }
 
   return (
-    <div className="w-[686px] h-[120px] flex mb-9">
-      <Avatar src="https://github.com/diego3g.png" hasBorder={false} alt="" />
+    <div className="w-full h-[120px] flex mb-9">
+      <img
+        src="https://github.com/rafaelppereira.png"
+        alt="Foto de Bernardo Alves Padilha"
+        className="rounded-md w-12 h-12 border-2 border-zinc-600"
+      />
 
       <div className="flex-1 pl-4">
-        <div className="bg-[#29292E] rounded-lg pt-4 pb-[25px] px-4">
+        <div className="bg-zinc-800 rounded-lg pt-4 pb-1 px-4 relative group">
           <header className="flex items-start justify-between">
             <div className="flex flex-col">
-              <strong className="text-white">Bernardo Padilha</strong>
-              <time className="text-[#8D8D99] text-sm">
+              <h1 className="text-white">Bernardo Padilha</h1>
+              <time className="text-[#8D8D99] text-xs">
                 Publicado há 1 hora
               </time>
             </div>
 
-            <button
-              title="Deletar comentário"
+            <Button
               onClick={handleDeleteComment}
-              className=" hover:rounded-full hover:bg-red-500 "
+              size="icon"
+              className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity bg-transparent text-zinc-200 hover:bg-red-500 duration-150 absolute top-2 right-2"
             >
-              <Trash size={20} color="#fff" />
-            </button>
+              <Trash className="size-4" />
+            </Button>
           </header>
+          <p className="text-white pt-4">{content}</p>
 
-          <p className="text-white pt-4"> {content} </p>
-        </div>
-
-        <footer className="flex items-center text-white">
-          <button
-            onClick={handleLikeComment}
-            className="flex w-36 justify-between pt-2"
-          >
-            <ThumbsUp
-              size={24}
-              className="w-14 rounded-xl hover:bg-primary text-white"
-            />
-            Aplaudir <span>{likeCount}</span>
+          <button className="text-xs font-medium hover:brightness-75 duration-150 text-zinc-400 opacity-0 cursor-pointer group-hover:opacity-100 transition-opacity">
+            Responder
           </button>
-        </footer>
+        </div>
       </div>
     </div>
   )
