@@ -5,8 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 export function Login() {
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-login bg-no-repeat bg-cover bg-center bg-fixed">
-      <div>
-        <Tabs defaultValue="Sign-in" className="w-[400px]">
+      <div className="max-w-[400px] w-full px-2">
+        <Tabs defaultValue="Sign-in">
           <TabsList className="w-full bg-[#13141D]/60 backdrop-blur-sm">
             <TabsTrigger
               className="w-full data-[state=active]:bg-[#453CA6]"
