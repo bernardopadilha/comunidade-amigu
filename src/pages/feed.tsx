@@ -200,7 +200,7 @@ export function Feed() {
     <div className="w-full h-full bg-body bg-no-repeat bg-cover bg-center bg-fixed">
       <Header />
 
-      <div className="max-w-[1420px] w-full flex flex-col lg:flex-row items-start justify-center mt-20 mx-auto px-8 gap-8 ">
+      <div className="max-w-[1420px] w-full flex flex-col lg:flex-row items-start justify-center mt-20 mx-auto px-2 gap-8 ">
         <SideBar />
 
         <main className="w-full flex-1">

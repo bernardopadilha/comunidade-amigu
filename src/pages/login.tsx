@@ -1,8 +1,11 @@
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useNavigate } from 'react-router-dom'
 
 export function Login() {
+  const navigate = useNavigate()
+
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-login bg-no-repeat bg-cover bg-center bg-fixed">
       <div className="max-w-[400px] w-full px-2">
@@ -64,6 +67,7 @@ export function Login() {
                 <Button
                   size="lg"
                   type="submit"
+                  onClick={() => navigate('/feed')}
                   className="bg-gradient-to-r from-[#453CA6] to-[#A697F7] mt-5 text-white"
                 >
                   Entrar

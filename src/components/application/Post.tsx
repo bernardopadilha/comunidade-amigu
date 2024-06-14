@@ -197,7 +197,7 @@ export function Post({ author, content }: PostProps) {
               onInvalid={handleNewCommentInvalid}
               onKeyDown={handleKeyDown}
               required
-              className="bg-[#252528] border-[1px] text-white rounded-lg border-none resize-none h-[82px] pl-2"
+              className="bg-[#252528] border-[1px] text-white rounded-lg border-none resize-none h-[82px] p-3"
             />
 
             <Button
