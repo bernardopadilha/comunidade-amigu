@@ -1,8 +1,12 @@
 import { Content, Post } from '@/components/application/Post'
 import { Header } from '@/components/application/Header'
-import { SideBar } from '@/components/application/SideBar'
 import { Notices } from '@/components/application/amigu-notices'
 import { Input } from '@/components/ui/input'
+
+import { SideBar } from '@/components/application/SideBar'
+import { useQuery } from '@tanstack/react-query'
+import { getUser } from '@/api/auth/get-user'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const posts = [
   {
@@ -196,32 +200,53 @@ const posts = [
 ]
 
 export function Feed() {
+  const { data: getUserFn, isPending } = useQuery({
+    queryKey: ['user'],
+    queryFn: getUser,
+  })
+
   return (
     <div className="w-full h-full bg-body bg-no-repeat bg-cover bg-center bg-fixed">
-      <Header />
+      <Header pending={isPending} />
 
       <div className="max-w-[1420px] w-full flex flex-col lg:flex-row items-start justify-center mt-20 mx-auto px-2 gap-8 ">
-        <SideBar />
+        <SideBar
+          pending={isPending}
+          name={getUserFn?.name ?? ''}
+          username={getUserFn?.username ?? ''}
+          avatarUrl={getUserFn?.avatarUrl ?? ''}
+          createdAt={getUserFn?.createdAt ?? ''}
+          thumbnailUrl={getUserFn?.thumbnailUrl}
+        />
 
         <main className="w-full flex-1">
           <div className="bg-post/80 backdrop-blur-sm border-2 border-zinc-700 py-5 md:px-10 px-5 rounded-lg mb-8">
-            {/* <Skeleton className="w-36 h-8" /> */}
-            <span className="text-lg font-medium text-zinc-100">
-              Nova postagem
-            </span>
+            {isPending ? (
+              <Skeleton className="w-36 h-8" />
+            ) : (
+              <span className="text-lg font-medium text-zinc-100">
+                Nova postagem
+              </span>
+            )}
             <div className="flex items-center gap-5 mt-3">
-              {/* <Skeleton className="shrink-0 w-14 h-14 rounded-md" /> */}
-              <img
-                src="https://github.com/Bernardopadilha.png"
-                alt="Foto de Bernardo Alves Padilha"
-                className="rounded-md w-14 border-2 border-zinc-600"
-              />
+              {isPending ? (
+                <Skeleton className="shrink-0 w-14 h-14 rounded-md" />
+              ) : (
+                <img
+                  src={getUserFn?.avatarUrl}
+                  alt="Foto de Bernardo Alves Padilha"
+                  className="rounded-md w-14 border-2 border-zinc-600"
+                />
+              )}
 
-              {/* <Skeleton className="w-full h-14 rounded-md" /> */}
-              <Input
-                className="bg-[#252528] text-zinc-200 h-14 focus-visible:!ring-amigu focus-visible:ring-offset-0 border-none placeholder:text-zinc-200"
-                placeholder="Comece uma publicação"
-              />
+              {isPending ? (
+                <Skeleton className="w-full h-14 rounded-md" />
+              ) : (
+                <Input
+                  className="bg-[#252528] text-zinc-200 h-14 focus-visible:!ring-amigu focus-visible:ring-offset-0 border-none placeholder:text-zinc-200"
+                  placeholder="Comece uma publicação"
+                />
+              )}
             </div>
           </div>
 
@@ -229,6 +254,7 @@ export function Feed() {
             return (
               <Post
                 key={post.id}
+                pending={isPending}
                 author={post.author}
                 content={post.content}
                 publishedAt={post.publishedAt}

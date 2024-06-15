@@ -13,7 +13,7 @@ import {
 import { Textarea } from '../ui/textarea'
 import { Separator } from '../ui/separator'
 import { Comment } from './Comment'
-// import { Skeleton } from '../ui/skeleton'
+import { Skeleton } from '../ui/skeleton'
 
 interface Author {
   name: string
@@ -30,9 +30,10 @@ interface PostProps {
   author: Author
   publishedAt: Date
   content: Content[]
+  pending: boolean
 }
 
-export function Post({ author, content }: PostProps) {
+export function Post({ author, content, pending }: PostProps) {
   const [comments, setComments] = useState(['Post mto bacana, hein?!'])
 
   const [newCommentText, setNewCommentText] = useState('')
@@ -85,99 +86,127 @@ export function Post({ author, content }: PostProps) {
     >
       <header className="text-white md:px-10 px-5 flex justify-between items-center pb-6">
         <div className="flex items-center">
-          {/* <Skeleton className="shrink-0 w-16 h-16 rounded-md" /> */}
-          <img
-            src={author.avatarUrl}
-            alt="Foto de Bernardo Alves Padilha"
-            className="rounded-md w-16 border-2 border-zinc-600"
-          />
+          {pending ? (
+            <Skeleton className="shrink-0 w-16 h-16 rounded-md" />
+          ) : (
+            <img
+              src={author.avatarUrl}
+              alt="Foto de Bernardo Alves Padilha"
+              className="rounded-md w-16 border-2 border-zinc-600"
+            />
+          )}
           <div className="pl-4">
-            {/* <Skeleton className="shrink-0 w-44 h-6 rounded-md" /> */}
-            <h6 className="font-bold text-base">{author.name}</h6>
+            {pending ? (
+              <Skeleton className="shrink-0 w-44 h-6 rounded-md" />
+            ) : (
+              <h6 className="font-bold text-base">{author.name}</h6>
+            )}
 
-            {/* <Skeleton className="shrink-0 w-24 h-4 rounded-md mt-2" /> */}
-            <p className="text-[#8D8D99] text-xs">{author.role}</p>
+            {pending ? (
+              <Skeleton className="shrink-0 w-24 h-4 rounded-md mt-2" />
+            ) : (
+              <p className="text-[#8D8D99] text-xs">{author.role}</p>
+            )}
           </div>
         </div>
-        {/* <Skeleton className="shrink-0 w-24 h-4 rounded-md mt-1" /> */}
-        <time className="text-[#8D8D99] text-sm hidden md:block">
-          Publicado há 2h
-        </time>
+        {pending ? (
+          <Skeleton className="shrink-0 w-24 h-4 rounded-md mt-1" />
+        ) : (
+          <time className="text-[#8D8D99] text-sm hidden md:block">
+            Publicado há 2h
+          </time>
+        )}
       </header>
 
       <div className="md:px-10 px-5">
-        {/* <Skeleton className="shrink-0 w-24 h-6 rounded-md" />
-        <Skeleton className="shrink-0 w-full h-6 rounded-md mt-1" />
-        <Skeleton className="shrink-0 w-2/3 h-6 rounded-md mt-1" />
+        {pending ? (
+          <>
+            <Skeleton className="shrink-0 w-24 h-6 rounded-md" />
+            <Skeleton className="shrink-0 w-full h-6 rounded-md mt-1" />
+            <Skeleton className="shrink-0 w-2/3 h-6 rounded-md mt-1" />
 
-        <Skeleton className="shrink-0 w-52 h-6 rounded-md mt-5" />
-        <Skeleton className="shrink-0 w-56 h-6 rounded-md mt-1" /> */}
-        {content.map((line) => {
-          if (line.type === 'paragraph') {
-            return (
-              <p key={line.content} className="pb-3 text-zinc-100">
-                {line.content}
-              </p>
-            )
-          } else if (line.type === 'link') {
-            return (
-              <p
-                key={line.content}
-                className="pt-3 font-semibold text-link hover:underline"
-              >
-                <a href="#">{line.content}</a>
-              </p>
-            )
-          }
-        })}
+            <Skeleton className="shrink-0 w-52 h-6 rounded-md mt-5" />
+            <Skeleton className="shrink-0 w-56 h-6 rounded-md mt-1" />
+          </>
+        ) : (
+          <>
+            {content.map((line) => {
+              if (line.type === 'paragraph') {
+                return (
+                  <p key={line.content} className="pb-3 text-zinc-100">
+                    {line.content}
+                  </p>
+                )
+              } else if (line.type === 'link') {
+                return (
+                  <p
+                    key={line.content}
+                    className="pt-3 font-semibold text-link hover:underline"
+                  >
+                    <a href="#">{line.content}</a>
+                  </p>
+                )
+              }
+            })}
+          </>
+        )}
       </div>
 
       <Separator className="bg-zinc-600 mt-2" />
 
       <div className="flex items-center justify-between md:px-10 px-5 py-2">
         <div className="flex items-center gap-3">
-          {/* <Skeleton className="shrink-0 w-16 h-6 rounded-md mt-1" /> */}
-          <div className="flex items-center">
-            <button
-              onClick={() => setActiveLike(!activeLike)}
-              className="bg-transparent hover:bg-transparent hover:text-red-500 text-zinc-200"
-            >
-              {activeLike ? (
-                <img src="./heart.svg" />
-              ) : (
-                <Heart className="size-5" />
-              )}
-            </button>
-            <span className="text-xs text-zinc-400 ml-1">2.2K</span>
-          </div>
-
-          {/* <Skeleton className="shrink-0 w-16 h-6 rounded-md mt-1" /> */}
-          <div className="flex items-center">
-            <button
-              onClick={() => setActiveComments(!activeComments)}
-              className="bg-transparent hover:bg-transparent hover:text-blue-500 text-zinc-200"
-            >
-              {activeComments ? (
-                <img src="./message.svg" />
-              ) : (
-                <MessageCircle className="size-5" />
-              )}
-            </button>
-            <span className="text-xs text-zinc-400 ml-1">300</span>
-          </div>
-        </div>
-        {/* <Skeleton className="shrink-0 w-8 h-6 rounded-md mt-1" /> */}
-        <Button
-          size="icon"
-          onClick={() => setActiveSave(!activeSave)}
-          className="bg-transparent hover:bg-transparent hover:text-amber-300 text-zinc-200"
-        >
-          {activeSave ? (
-            <img src="./save.svg" />
+          {pending ? (
+            <Skeleton className="shrink-0 w-12 h-6 rounded-md mt-1" />
           ) : (
-            <Bookmark className="size-5" />
+            <div className="flex items-center">
+              <button
+                onClick={() => setActiveLike(!activeLike)}
+                className="bg-transparent hover:bg-transparent hover:text-red-500 text-zinc-200"
+              >
+                {activeLike ? (
+                  <img src="./heart.svg" />
+                ) : (
+                  <Heart className="size-5" />
+                )}
+              </button>
+              <span className="text-xs text-zinc-400 ml-1">2.2K</span>
+            </div>
           )}
-        </Button>
+
+          {pending ? (
+            <Skeleton className="shrink-0 w-12 h-6 rounded-md mt-1" />
+          ) : (
+            <div className="flex items-center">
+              <button
+                onClick={() => setActiveComments(!activeComments)}
+                className="bg-transparent hover:bg-transparent hover:text-blue-500 text-zinc-200"
+              >
+                {activeComments ? (
+                  <img src="./message.svg" />
+                ) : (
+                  <MessageCircle className="size-5" />
+                )}
+              </button>
+              <span className="text-xs text-zinc-400 ml-1">300</span>
+            </div>
+          )}
+        </div>
+        {pending ? (
+          <Skeleton className="shrink-0 w-8 h-6 rounded-md mt-1" />
+        ) : (
+          <Button
+            size="icon"
+            onClick={() => setActiveSave(!activeSave)}
+            className="bg-transparent hover:bg-transparent hover:text-amber-300 text-zinc-200"
+          >
+            {activeSave ? (
+              <img src="./save.svg" />
+            ) : (
+              <Bookmark className="size-5" />
+            )}
+          </Button>
+        )}
       </div>
 
       {activeComments && <Separator className="bg-zinc-600" />}

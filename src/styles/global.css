@@ -89,3 +89,7 @@
     }
     
   }
+
+  ::selection {
+    @apply bg-[#453CA6]
+  }
