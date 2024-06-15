@@ -57,7 +57,7 @@ export function Header({ pending }: HeaderProps) {
           )}
         </div>
         {pending ? (
-          <Skeleton className=" h-8 w-96" />
+          <Skeleton className=" h-8 w-96 hidden md:block" />
         ) : (
           <div className="relative hidden md:flex">
             <Search className="absolute size-4 text-zinc-300 top-1/2 -translate-y-1/2 left-3" />
