@@ -6,7 +6,6 @@ import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { UserLogOut } from '@/api/auth/log-out'
 import { useNavigate } from 'react-router-dom'
-// import { Skeleton } from '../ui/skeleton'
 
 interface HeaderProps {
   pending: boolean
@@ -40,7 +39,7 @@ export function Header({ pending }: HeaderProps) {
           ) : (
             <Button
               size="icon"
-              className="text-zinc-300 bg-zinc-800 border-2 border-zinc-600 hidden md:flex"
+              className="text-zinc-300 bg-zinc-800 hover:bg-zinc-800 hover:brightness-75 border-2 border-zinc-600 hidden md:flex"
             >
               <Keyboard className="size-5" />
             </Button>
@@ -73,10 +72,10 @@ export function Header({ pending }: HeaderProps) {
         ) : (
           <Button
             onClick={handleLogOut}
-            size="icon"
-            className="bg-amigu hover:bg-amigu hover:brightness-90"
+            className="bg-amigu hover:bg-amigu text-white hover:brightness-90"
           >
-            <LogOut className="text-white " />
+            <LogOut className="size-4 mr-2" />
+            Sair da conta
           </Button>
         )}
       </div>

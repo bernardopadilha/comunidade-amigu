@@ -11,8 +11,10 @@ export async function signUp(signUpData: signUpProps) {
   const name = signUpData.name.split(' ')
 
   // Pegar a primeira e a última palavra
-  const firstName = name[0].toLowerCase
-  const lastName = name[name.length - 1].toLowerCase
+  const firstName = name[0]
+  const lastName = name[name.length - 1]
+
+  const username = `@${firstName}${lastName}`
 
   const { data: userData, error: userError } = await supabase
     .from('user')
@@ -21,7 +23,7 @@ export async function signUp(signUpData: signUpProps) {
         name: signUpData.name,
         email: signUpData.email,
         password: signUpData.password,
-        username: `@${firstName}${lastName}`,
+        username: username.toLowerCase(),
       },
     ])
     .select()

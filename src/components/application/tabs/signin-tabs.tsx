@@ -45,7 +45,7 @@ export function SigInTabs() {
   }
 
   return (
-    <div className="w-full max-w-[26rem] flex flex-col items-center justify-start py-8 rounded-[10px] px-8 border-2 border-[#1F2130] bg-cardLogin bg-no-repeat bg-cover bg-center bg-fixed">
+    <div className="w-full max-w-[26rem] bg-[#13141D]/30 backdrop-blur-sm flex flex-col items-center justify-start py-8 rounded-[10px] px-8 border-2 border-[#1F2130] ">
       <img src="./logo-amigu.png" alt="logo amigu" className="w-44" />
 
       <div className="mt-4 flex flex-col items-center text-center">

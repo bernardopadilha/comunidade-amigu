@@ -22,6 +22,7 @@ export const signUpSchema = z
         invalid_type_error: 'Esse campo não pode ser vazio',
         required_error: 'Esse campo não pode ser vazio',
       })
+      .min(6, 'Senha com no mínimo 6 caracteres')
       .nonempty('Por favor digite sua senha!'),
 
     confirmPassword: z

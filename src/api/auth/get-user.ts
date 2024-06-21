@@ -1,25 +1,25 @@
 import { supabase } from '../supabase'
 
-interface userLoggedProps {
+export interface userLoggedProps {
+  id: number
   name: string
   email: string
   username: string
   avatarUrl: string
   thumbnailUrl: string
   specialty: string
+  active: boolean
   updatedAt: Date
   createdAt: Date
 }
 
-export async function getUser(): Promise<userLoggedProps | undefined> {
+export async function getUserLogged(): Promise<userLoggedProps | undefined> {
   const {
-    data: { user },
-  } = await supabase.auth.getUser()
+    data: { session },
+  } = await supabase.auth.getSession()
 
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-
-  if (user) {
-    const userEmail = user.email
+  if (session) {
+    const userEmail = session.user.email
 
     const { data: profile, error } = await supabase
       .from('user')

@@ -1,3 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+const {
+  default: flattenColorPalette,
+} = require('tailwindcss/lib/util/flattenColorPalette')
+
+const svgToDataUri = require('mini-svg-data-uri')
+
+function addVariablesForColors({ addBase, theme }) {
+  const allColors = flattenColorPalette(theme('colors'))
+  const newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
+  )
+
+  addBase({
+    ':root': newVars,
+  })
+}
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
@@ -24,7 +44,7 @@ module.exports = {
         search: '#26292D',
         comment: '#A4A4AB',
         link: '#5669AA',
-        amigu: '#2E3A62',
+        amigu: '#453CA6',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
@@ -88,5 +108,16 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [require('tailwindcss-animate'), addVariablesForColors, function ({ matchUtilities, theme }: any) {
+    matchUtilities(
+      {
+        "bg-dot-thick": (value: any) => ({
+          backgroundImage: `url("${svgToDataUri(
+            `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="16" height="16" fill="none"><circle fill="${value}" id="pattern-circle" cx="10" cy="10" r="2.5"></circle></svg>`
+          )}")`,
+        }),
+      },
+      { values: flattenColorPalette(theme("backgroundColor")), type: "color" }
+    );
+  },],
 }
