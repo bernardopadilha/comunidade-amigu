@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Cog } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Skeleton } from '../ui/skeleton'
@@ -25,7 +25,6 @@ import { ThumbnailDropzone } from './dropzone/dropzone-thumbnail'
 import { UpdateUser } from '@/api/users/update-user'
 import { UpdateThumbnail } from '@/api/users/update-thumbnail'
 import { UpdateAvatar } from '@/api/users/update-avatar'
-import { UpdateActiveUser } from '@/api/users/update-active-user'
 
 export function SideBar() {
   const [isOpen, setIsOpen] = useState(false)
