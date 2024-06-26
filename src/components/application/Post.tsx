@@ -14,13 +14,15 @@ import {
   differenceInMinutes,
   isYesterday,
 } from 'date-fns'
-import { LikeAtPost } from '@/api/posts/like-at-post'
 import { toast } from 'sonner'
-import { SaveAtPost } from '@/api/posts/save-at-post'
 import { NewComment } from './new-comment'
 import { FindAllLikes } from '@/api/posts/find-all-likes'
 import { FindAllComments } from '@/api/comments/find-all-comments'
 import { Comment } from './Comment'
+import { getUserLogged } from '@/api/auth/get-user'
+import { postSavedByLoggedInUser } from '@/api/posts/post-saved-by-logged-in-user'
+import { SavePost } from '@/api/posts/save-post'
+import { LikePost } from '@/api/posts/like-post'
 
 interface PostProps {
   userId: number
@@ -31,35 +33,52 @@ interface PostProps {
 
 export function Post({ userId, postId, content, publishedAt }: PostProps) {
   const [activeComments, setActiveComments] = useState<boolean>(false)
-  const [activeLike, setActiveLike] = useState<boolean>(false)
-  const [activeSave, setActiveSave] = useState<boolean>(false)
+
+  const { data: getUserLoggedFn } = useQuery({
+    queryKey: ['user'],
+    queryFn: getUserLogged,
+  })
 
   const { data: GetUserByIdFn, isPending } = useQuery({
-    queryKey: ['pending', String(userId)],
+    queryKey: ['getUserById', String(userId)],
     queryFn: GetUserById,
   })
 
   const { data: FindAllLikesFn, refetch: refetchLikes } = useQuery({
-    queryKey: ['pending', String(userId), String(postId)],
+    queryKey: ['findAllLikes', String(userId), String(postId)],
     queryFn: FindAllLikes,
   })
+
+  const { data: PostSavedByLoggedInUserFn, refetch: refetchSave } = useQuery({
+    queryKey: [
+      'postSavedByLoggedInUser',
+      String(getUserLoggedFn?.id),
+      String(postId),
+    ],
+    queryFn: postSavedByLoggedInUser,
+  })
+
+  const activeSave = PostSavedByLoggedInUserFn?.filter(
+    (save) => save.userId === userId,
+  )
+  const activeLike = FindAllLikesFn?.filter((like) => like.userId === userId)
 
   const { data: FindAllCommentsFn, refetch: refetchComments } = useQuery({
     queryKey: ['comments', String(postId)],
     queryFn: FindAllComments,
   })
 
-  const { mutateAsync: LikeAtPostFn, isPending: pendingLike } = useMutation({
-    mutationKey: ['likeAtPost'],
-    mutationFn: LikeAtPost,
+  const { mutateAsync: LikePostFn, isPending: pendingLike } = useMutation({
+    mutationKey: ['likePost'],
+    mutationFn: LikePost,
     onError: (error) => {
       toast.error(error.message)
     },
   })
 
-  const { mutateAsync: SaveAtPostFn, isPending: pendingSave } = useMutation({
-    mutationKey: ['saveAtPost'],
-    mutationFn: SaveAtPost,
+  const { mutateAsync: SavePostFn, isPending: pendingSave } = useMutation({
+    mutationKey: ['savePost'],
+    mutationFn: SavePost,
     onError: (error) => {
       toast.error(error.message)
     },
@@ -70,8 +89,7 @@ export function Post({ userId, postId, content, publishedAt }: PostProps) {
       userId,
       postId,
     }
-    await LikeAtPostFn(credentials)
-    setActiveLike(!activeLike)
+    await LikePostFn(credentials)
     await refetchLikes()
   }
 
@@ -80,8 +98,8 @@ export function Post({ userId, postId, content, publishedAt }: PostProps) {
       userId,
       postId,
     }
-    await SaveAtPostFn(credentials)
-    setActiveSave(!activeSave)
+    await SavePostFn(credentials)
+    refetchSave()
   }
 
   function formatPublishedDate(publishedAt: Date) {
@@ -114,7 +132,7 @@ export function Post({ userId, postId, content, publishedAt }: PostProps) {
 
   return (
     <div
-      className={`${activeComments ? 'py-4' : 'pt-4'} w-full bg-post/60 backdrop-blur-sm border-2 border-zinc-700  rounded-lg mb-8`}
+      className={`${activeComments ? 'py-4' : 'pt-4'} w-full flex-1 bg-post/60 backdrop-blur-sm border-2 border-zinc-700 rounded-lg mb-8`}
     >
       {/* Header */}
       <header className="text-white md:px-10 px-5 flex justify-between items-center pb-6">
@@ -240,7 +258,7 @@ export function Post({ userId, postId, content, publishedAt }: PostProps) {
                 disabled={pendingLike}
                 className="bg-transparent hover:bg-transparent hover:text-red-500 text-zinc-200 p-2"
               >
-                {activeLike ? (
+                {activeLike && activeLike.length > 0 ? (
                   <img src="./heart.svg" />
                 ) : (
                   <Heart className="size-5" />
@@ -287,7 +305,7 @@ export function Post({ userId, postId, content, publishedAt }: PostProps) {
             disabled={pendingSave}
             className="bg-transparent hover:bg-transparent hover:text-amber-300 text-zinc-200"
           >
-            {activeSave ? (
+            {activeSave && activeSave.length > 0 ? (
               <img src="./save.svg" />
             ) : (
               <Bookmark className="size-5" />

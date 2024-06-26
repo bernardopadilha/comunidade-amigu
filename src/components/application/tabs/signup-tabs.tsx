@@ -34,7 +34,9 @@ export function SigUpTabs() {
       toast.error(error.message)
     },
     onSuccess: () => {
-      toast.success('Sua conta foi criada com sucesso!')
+      toast.success(
+        'Sua conta foi criada com sucesso, verifique seu email para confirmação',
+      )
     },
   })
 

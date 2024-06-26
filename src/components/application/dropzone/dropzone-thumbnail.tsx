@@ -2,15 +2,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getUserLogged } from '@/api/auth/get-user'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useQuery } from '@tanstack/react-query'
+import { PencilIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { toast } from 'sonner'
 
-export function DropzoneAvatar({
-  setAvatarFiles,
-  setAvatarAcceptedFiles,
+export function ThumbnailDropzone({
+  setThumbnailFiles,
+  setThumbnailAcceptedFiles,
 }: any) {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone()
 
@@ -22,19 +24,19 @@ export function DropzoneAvatar({
 
       if (extension !== 'png') {
         toast.error('Você precisa selecionar um arquivo de imagem!')
-        setAvatarFiles([])
+        setThumbnailFiles([])
         return
       }
 
       if (acceptedFiles.length > 1) {
         toast.error('Por favor selecione apenas um arquivo de imagem')
-        setAvatarFiles([])
+        setThumbnailFiles([])
         return
       }
 
-      setAvatarAcceptedFiles(acceptedFiles)
+      setThumbnailAcceptedFiles(acceptedFiles)
 
-      setAvatarFiles(
+      setThumbnailFiles(
         acceptedFiles.map((file: any) => (
           <li key={file.path}>
             {file.path} - {file.size} bytes
@@ -50,31 +52,33 @@ export function DropzoneAvatar({
   })
 
   return (
-    <section className="w-full flex justify-center ">
+    <section className="w-full">
       <div
         {...getRootProps({ className: 'dropzone' })}
         style={
-          getUserLoggedFn?.avatarUrl
+          getUserLoggedFn?.thumbnailUrl
             ? {
-                backgroundImage: `url(${getUserLoggedFn?.avatarUrl})`,
+                backgroundImage: `url(${getUserLoggedFn?.thumbnailUrl})`,
               }
             : {}
         }
         className={`${
-          getUserLoggedFn?.avatarUrl
+          getUserLoggedFn?.thumbnailUrl
             ? 'bg-cover bg-center bg-no-repeat'
-            : 'bg-zinc-800'
-        } inset-0 w-full max-w-28 flex h-28 flex-col items-center justify-center rounded-full hover:brightness-50  shadow-2xl relative -top-12 transition-all hover:scale-[.98] cursor-pointer`}
+            : 'bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-900 via-gray-100 to-gray-900'
+        } inset-0 w-full flex flex-col items-center justify-center h-28 rounded hover:brightness-50 shadow-3xl transition-all hover:scale-[.98] cursor-pointer z-10`}
       >
-        {!getUserLoggedFn?.avatarUrl && (
-          <span className="text-3xl font-semibold flex items-center justify-center h-full w-full">
-            {getUserLoggedFn?.name.charAt(0).toUpperCase()}{' '}
-          </span>
-        )}
+        <Button
+          disabled
+          size="icon"
+          className="absolute top-2 right-2 bg-zinc-800 disabled:opacity-100"
+        >
+          <PencilIcon className="size-4 text-white" />
+        </Button>
 
         <Input
           {...getInputProps()}
-          className="opacity-0 absolute inset-0 w-full h-full cursor-pointer z-10"
+          className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
         />
       </div>
     </section>

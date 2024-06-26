@@ -5,14 +5,12 @@ interface LikeAtPostProps {
   postId: number
 }
 
-export async function LikeAtPost(credentials: LikeAtPostProps) {
+export async function LikePost(credentials: LikeAtPostProps) {
   const { data: likeAtPost, error: errorLike } = await supabase
     .from('likeAtPost')
     .select('*')
     .eq('userId', credentials.userId)
     .eq('postId', credentials.postId)
-
-  console.log(likeAtPost)
 
   if (errorLike) {
     throw new Error(errorLike.message)

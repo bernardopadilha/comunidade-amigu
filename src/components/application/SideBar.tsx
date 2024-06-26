@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
-import { Cog, PencilIcon } from 'lucide-react'
+import { Cog } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Skeleton } from '../ui/skeleton'
 import { Separator } from '../ui/separator'
@@ -19,12 +20,27 @@ import { UpdateUserData, updateUserSchema } from '@/lib/zod/update-user.zod'
 import { Input } from '../ui/input'
 import { getUserLogged } from '@/api/auth/get-user'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { UpdateProfileUser } from '@/api/users/update-profile-user'
+import { DropzoneAvatar } from './dropzone/dropzone-avatar'
+import { ThumbnailDropzone } from './dropzone/dropzone-thumbnail'
+import { UpdateUser } from '@/api/users/update-user'
+import { UpdateThumbnail } from '@/api/users/update-thumbnail'
+import { UpdateAvatar } from '@/api/users/update-avatar'
+import { UpdateActiveUser } from '@/api/users/update-active-user'
 
 export function SideBar() {
   const [isOpen, setIsOpen] = useState(false)
 
-  const { data: getUserLoggedFn, isPending } = useQuery({
+  const [avatarFiles, setAvatarFiles] = useState([])
+  const [avatarAcceptedFiles, setAvatarAcceptedFiles] = useState([])
+
+  const [thumbnailFiles, setThumbnailFiles] = useState([])
+  const [thumbnailAcceptedFiles, setThumbnailAcceptedFiles] = useState([])
+
+  const {
+    data: getUserLoggedFn,
+    isPending,
+    refetch,
+  } = useQuery({
     queryKey: ['user'],
     queryFn: getUserLogged,
   })
@@ -48,42 +64,59 @@ export function SideBar() {
     resolver: zodResolver(updateUserSchema),
   })
 
-  const { mutateAsync: UpdateProfileUserFn, isPending: pendingUpdateUser } =
-    useMutation({
-      mutationKey: ['updateProfileUser'],
-      mutationFn: UpdateProfileUser,
-    })
+  const { mutateAsync: UpdateUserFn } = useMutation({
+    mutationKey: ['updateUser'],
+    mutationFn: UpdateUser,
+  })
 
-  const [thumbnailUrlChange, setThumbnailUrlChange] = useState<
-    string | undefined
-  >()
-  const [avatarUrlChange, setAvatarUrlChange] = useState<string | undefined>()
+  const { mutateAsync: UpdateThumbnailFn } = useMutation({
+    mutationKey: ['updateThumbnail'],
+    mutationFn: UpdateThumbnail,
+  })
 
-  console.log(thumbnailUrlChange, avatarUrlChange)
+  const { mutateAsync: UpdateAvatarFn } = useMutation({
+    mutationKey: ['updateAvatar'],
+    mutationFn: UpdateAvatar,
+  })
 
-  async function handleUpdateUser(data) {
+  async function handleUpdateUser(data: UpdateUserData) {
     if (getUserLoggedFn) {
-      // UpdateProfileUser(Number(getUserLoggedFn.id))
-    }
-  }
+      let avatarUrlPath = null
+      let thumbnailUrlPath = null
 
-  const handleFileChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    type: 'avatarUrl' | 'thumbnailUrl',
-  ) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      const url = URL.createObjectURL(file)
-      if (type === 'avatarUrl') {
-        setAvatarUrlChange(url)
-      } else {
-        setThumbnailUrlChange(url)
+      if (avatarFiles.length > 0) {
+        const avatarUrl = await UpdateAvatarFn({
+          userId: getUserLoggedFn.id,
+          avatarFile: avatarAcceptedFiles[0],
+        })
+        avatarUrlPath = avatarUrl
       }
-      setValue(type, url)
+
+      if (thumbnailFiles.length > 0) {
+        const thumbnailUrl = await UpdateThumbnailFn({
+          userId: getUserLoggedFn.id,
+          thumbnailFile: thumbnailAcceptedFiles[0],
+        })
+        thumbnailUrlPath = thumbnailUrl
+      }
+
+      await UpdateUserFn({
+        userId: getUserLoggedFn.id,
+        avatarUrl: avatarUrlPath,
+        thumbnailUrl: thumbnailUrlPath,
+        userData: data,
+      })
+      refetch()
+      setIsOpen(!isOpen)
     }
   }
 
   const date = formatDate(getUserLoggedFn?.createdAt ?? '')
+
+  const { mutateAsync: UpdateActiveUserFn } = useMutation({
+    mutationKey: ['updateActiveUser'],
+    mutationFn: UpdateActiveUser,
+  })
 
   useEffect(() => {
     if (getUserLoggedFn) {
@@ -91,6 +124,8 @@ export function SideBar() {
       setValue('username', getUserLoggedFn.username)
       if (getUserLoggedFn.active) {
         setIsOpen(true)
+
+        UpdateActiveUserFn({ userId: getUserLoggedFn.id })
       } else {
         setIsOpen(false)
       }
@@ -99,7 +134,7 @@ export function SideBar() {
 
   return (
     <>
-      <aside className="shrink-0 max-h-80 lg:sticky lg:top-20 w-full lg:w-80 bg-post/60 backdrop-blur-sm border-2 border-zinc-800 rounded-lg overflow-hidden">
+      <aside className="shrink-0 max-h-80 w-full lg:w-80 bg-post/60 backdrop-blur-sm border-2 border-zinc-800 rounded-lg overflow-hidden">
         {isPending ? (
           <Skeleton className="h-24 w-full relative rounded-none" />
         ) : (
@@ -141,42 +176,21 @@ export function SideBar() {
                     className="flex flex-col items-center justify-center space-y-4"
                   >
                     <div className="w-full max-w-sm border-2 border-zinc-800 rounded-md flex flex-col justify-center">
-                      <div className="relative">
-                        <div
-                          style={
-                            getUserLoggedFn?.thumbnailUrl
-                              ? {
-                                  backgroundImage: `url(${getUserLoggedFn?.thumbnailUrl})`,
-                                }
-                              : {}
-                          }
-                          className={`${
-                            getUserLoggedFn?.thumbnailUrl
-                              ? 'bg-cover bg-center bg-no-repeat'
-                              : 'bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-900 via-gray-100 to-gray-900'
-                          } inset-0 w-full flex flex-col items-center justify-center h-28 rounded hover:brightness-50 shadow-3xl`}
-                        >
-                          <Button
-                            size="icon"
-                            className="absolute top-2 right-2 bg-zinc-800 hover:bg-zinc-800 hover:brightness-75"
-                          >
-                            <PencilIcon className="size-4 text-white" />
-                          </Button>
-
-                          <Input
-                            type="file"
-                            {...register('thumbnailUrl')}
-                            accept=".jpeg, .jpg, .png, .webp, .svg"
-                            className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
-                            onChange={(e) =>
-                              handleFileChange(e, 'thumbnailUrl')
-                            }
-                          />
-                        </div>
+                      <div className="relative flex flex-col justify-center items-center">
+                        <ThumbnailDropzone
+                          thumbnailFiles={thumbnailFiles}
+                          setThumbnailFiles={setThumbnailFiles}
+                          setThumbnailAcceptedFiles={setThumbnailAcceptedFiles}
+                        />
+                        <DropzoneAvatar
+                          avatarFiles={avatarFiles}
+                          setAvatarFiles={setAvatarFiles}
+                          setAvatarAcceptedFiles={setAvatarAcceptedFiles}
+                        />
                       </div>
 
                       <div className="flex flex-col items-center ">
-                        <div className="-mt-8 flex flex-col items-center pb-6">
+                        <div className="-mt-6 flex flex-col items-center pb-6 z-50">
                           <Input
                             type="text"
                             {...register('name')}

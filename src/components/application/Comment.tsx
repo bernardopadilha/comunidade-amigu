@@ -152,6 +152,12 @@ export function Comment({
 
   const publishedDateFormatted = formatPublishedDate(createdAt)
 
+  const urlRegex = /https?:\/\/[^\s]+/g
+  const hashTagRegex = /#[^\s#]+/g
+
+  // Dividir o conteúdo em linhas
+  const lines = content.split('\n')
+
   return (
     <div className="flex flex-col items-end">
       <div className="w-full flex">
@@ -212,7 +218,52 @@ export function Comment({
                 </AlertDialogContent>
               </AlertDialog>
             </header>
-            <p className="text-white pt-4">{content}</p>
+            <p className="text-white pt-4">
+              {lines.map((line, index) => {
+                // Se a linha estiver vazia, retorna um <br /> para pular uma linha
+                if (line.trim() === '') {
+                  return <br key={index} />
+                }
+
+                // Dividir a linha em partes de acordo com espaços, mantendo os delimitadores
+                const words = line.split(/(\s+)/)
+
+                // Processar cada palavra
+                const processedLine = words.map((word, wordIndex) => {
+                  if (urlRegex.test(word)) {
+                    // Exibir apenas a parte do URL a partir de 'www.'
+                    const displayText = word.includes('www.')
+                      ? word.split('www.')[1]
+                      : word
+                    return (
+                      <a
+                        href={word}
+                        className="text-[#8d83ff] font-medium hover:underline hover:brightness-75"
+                        key={wordIndex}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {displayText}
+                      </a>
+                    )
+                  } else if (hashTagRegex.test(word)) {
+                    // Aplicar cor especial para hashtags
+                    return (
+                      <span
+                        className="text-[#8d83ff] font-medium"
+                        key={wordIndex}
+                      >
+                        {word}
+                      </span>
+                    )
+                  } else {
+                    return <span key={wordIndex}>{word}</span>
+                  }
+                })
+
+                return <p key={index}>{processedLine}</p>
+              })}
+            </p>
 
             <button
               onClick={() => setIsOpen(!isOpen)}

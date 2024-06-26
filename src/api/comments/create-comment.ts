@@ -5,7 +5,7 @@ interface CreateCommentProps {
   comment: string
   userId: number
   postId: number
-  commentId: string
+  commentId: string | null
 }
 
 export async function CreateComment({

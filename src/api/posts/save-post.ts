@@ -5,7 +5,7 @@ interface SaveAtPostProps {
   postId: number
 }
 
-export async function SaveAtPost(credentials: SaveAtPostProps) {
+export async function SavePost(credentials: SaveAtPostProps) {
   const { data: saveAtPost, error: errorSave } = await supabase
     .from('saveAtPost')
     .select('*')

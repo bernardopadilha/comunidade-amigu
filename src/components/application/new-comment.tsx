@@ -53,6 +53,7 @@ export function NewComment({ postId, refetchComments }: NewCommentProps) {
         userId,
         comment: data.content,
         postId,
+        commentId: null,
       })
       reset()
       await refetchComments()
