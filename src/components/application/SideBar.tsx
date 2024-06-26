@@ -122,7 +122,7 @@ export function SideBar() {
               <img
                 src={getUserLoggedFn?.thumbnailUrl}
                 alt="banner"
-                className="w-full h-24 object-cover"
+                className="w-full h-24 object-cover pointer-events-none select-none"
               />
             ) : (
               <div className="w-full h-24 object-cover bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-900 via-gray-100 to-gray-900" />
@@ -234,7 +234,7 @@ export function SideBar() {
                 <img
                   src={getUserLoggedFn?.avatarUrl}
                   alt="Foto de perfil"
-                  className="rounded-full w-28 h-28 relative -top-12"
+                  className="rounded-full w-28 h-28 relative -top-12 pointer-events-none select-none"
                 />
               ) : (
                 <div className="w-28 h-28 rounded-full flex items-center justify-center relative -top-12 bg-zinc-800">

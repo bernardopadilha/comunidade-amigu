@@ -145,7 +145,7 @@ export function Post({ userId, postId, content, publishedAt }: PostProps) {
                 <img
                   src={GetUserByIdFn.avatarUrl}
                   alt="Foto de perfil"
-                  className="rounded-md w-16 h-16"
+                  className="rounded-md w-16 h-16 pointer-events-none select-none"
                 />
               ) : (
                 <div className="w-16 h-16 rounded-md flex items-center justify-center bg-[#252528]">

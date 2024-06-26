@@ -83,7 +83,7 @@ export function NewPost({ pending, user, refetch }: NewPostProps) {
               <img
                 src={user.avatarUrl}
                 alt="Foto de perfil"
-                className="rounded-md w-14 h-14"
+                className="rounded-md w-14 h-14 pointer-events-none select-none"
               />
             ) : (
               <div className="w-16 h-14 rounded-md flex items-center justify-center bg-[#252528]">
