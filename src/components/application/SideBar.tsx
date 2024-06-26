@@ -32,6 +32,8 @@ export function SideBar() {
   const [avatarFiles, setAvatarFiles] = useState([])
   const [avatarAcceptedFiles, setAvatarAcceptedFiles] = useState([])
 
+  console.log(avatarFiles)
+
   const [thumbnailFiles, setThumbnailFiles] = useState([])
   const [thumbnailAcceptedFiles, setThumbnailAcceptedFiles] = useState([])
 
@@ -163,6 +165,7 @@ export function SideBar() {
                         />
                         <DropzoneAvatar
                           avatarFiles={avatarFiles}
+                          avatarAcceptedFiles={avatarAcceptedFiles}
                           setAvatarFiles={setAvatarFiles}
                           setAvatarAcceptedFiles={setAvatarAcceptedFiles}
                         />

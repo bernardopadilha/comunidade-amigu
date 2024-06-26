@@ -51,19 +51,26 @@ export function ThumbnailDropzone({
     queryFn: getUserLogged,
   })
 
+  const imageUrl = acceptedFiles[0]?.name
+    ? URL.createObjectURL(acceptedFiles[0])
+    : getUserLoggedFn?.thumbnailUrl
+
   return (
     <section className="w-full">
       <div
         {...getRootProps({ className: 'dropzone' })}
         style={
-          getUserLoggedFn?.thumbnailUrl
+          imageUrl
             ? {
-                backgroundImage: `url(${getUserLoggedFn?.thumbnailUrl})`,
+                backgroundImage: `url(${imageUrl})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
               }
             : {}
         }
         className={`${
-          getUserLoggedFn?.thumbnailUrl
+          imageUrl
             ? 'bg-cover bg-center bg-no-repeat'
             : 'bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-900 via-gray-100 to-gray-900'
         } inset-0 w-full flex flex-col items-center justify-center h-28 rounded hover:brightness-50 shadow-3xl transition-all hover:scale-[.98] cursor-pointer z-10`}

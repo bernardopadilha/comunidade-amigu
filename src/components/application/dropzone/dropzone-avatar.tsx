@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getUserLogged } from '@/api/auth/get-user'
-import { Input } from '@/components/ui/input'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -42,37 +39,42 @@ export function DropzoneAvatar({
         )),
       )
     }
-  }, [acceptedFiles])
+  }, [acceptedFiles, setAvatarFiles, setAvatarAcceptedFiles])
 
   const { data: getUserLoggedFn } = useQuery({
     queryKey: ['user'],
     queryFn: getUserLogged,
   })
 
+  const imageUrl = acceptedFiles[0]?.name
+    ? URL.createObjectURL(acceptedFiles[0])
+    : getUserLoggedFn?.avatarUrl
+
   return (
-    <section className="w-full flex justify-center ">
+    <section className="w-full flex justify-center">
       <div
         {...getRootProps({ className: 'dropzone' })}
         style={
-          getUserLoggedFn?.avatarUrl
+          imageUrl
             ? {
-                backgroundImage: `url(${getUserLoggedFn?.avatarUrl})`,
+                backgroundImage: `url(${imageUrl})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
               }
             : {}
         }
         className={`${
-          getUserLoggedFn?.avatarUrl
-            ? 'bg-cover bg-center bg-no-repeat'
-            : 'bg-zinc-800'
-        } inset-0 w-full max-w-28 flex h-28 flex-col items-center justify-center rounded-full hover:brightness-50  shadow-2xl relative -top-12 transition-all hover:scale-[.98] cursor-pointer`}
+          imageUrl ? 'bg-cover bg-center bg-no-repeat' : 'bg-zinc-800'
+        } inset-0 w-full max-w-28 flex h-28 flex-col items-center justify-center rounded-full hover:brightness-50 shadow-2xl relative -top-12 transition-all hover:scale-[.98] cursor-pointer`}
       >
-        {!getUserLoggedFn?.avatarUrl && (
+        {!imageUrl && (
           <span className="text-3xl font-semibold flex items-center justify-center h-full w-full">
-            {getUserLoggedFn?.name.charAt(0).toUpperCase()}{' '}
+            {getUserLoggedFn?.name.charAt(0).toUpperCase()}
           </span>
         )}
 
-        <Input
+        <input
           {...getInputProps()}
           className="opacity-0 absolute inset-0 w-full h-full cursor-pointer z-10"
         />
