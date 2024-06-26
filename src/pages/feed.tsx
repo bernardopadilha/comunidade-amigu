@@ -8,15 +8,13 @@ import { getUserLogged } from '@/api/auth/get-user'
 import { NewPost } from '@/components/application/new-post'
 import { FindAllPosts } from '@/api/posts/find-all-posts'
 import { HeroHighlight } from '@/components/ui/hero-highlight'
-import { BookMarked, Heart } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { useState } from 'react'
 import { filterForLikes } from '@/api/posts/filter-for-likes'
 import { filterForSaves } from '@/api/posts/filter-for-saves'
+import { useState } from 'react'
 
 export function Feed() {
-  const [filteredAtLikes, setFilteredAtLikes] = useState(false)
-  const [filteredAtSaves, setFilteredAtSaves] = useState(false)
+  const [filteredAtLikes] = useState(false)
+  const [filteredAtSaves] = useState(false)
 
   const { data: getUserLoggedFn, isPending } = useQuery({
     queryKey: ['user'],
@@ -46,7 +44,7 @@ export function Feed() {
           <div className="sticky top-20 flex flex-col items-center justify-start gap-2">
             {getUserLoggedFn && <SideBar />}
 
-            <div className="w-full max-h-full flex items-center justify-center gap-2">
+            {/* <div className="w-full max-h-full flex items-center justify-center gap-2">
               <Button
                 onClick={() => {
                   setFilteredAtLikes(!filteredAtLikes)
@@ -68,7 +66,7 @@ export function Feed() {
                 <BookMarked className="size-5" />
                 <h1>Salvas</h1>
               </Button>
-            </div>
+            </div> */}
           </div>
 
           <main className="w-full flex-1">
