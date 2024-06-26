@@ -149,7 +149,7 @@ export function SubComment({
               </AlertDialogContent>
             </AlertDialog>
           </header>
-          <p className="text-white pt-4">
+          <p className="text-white py-4">
             {lines.map((line, index) => {
               // Se a linha estiver vazia, retorna um <br /> para pular uma linha
               if (line.trim() === '') {

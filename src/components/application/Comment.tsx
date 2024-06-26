@@ -289,43 +289,52 @@ export function Comment({
                 />
               )
             })}
+          {isOpen && (
+            <form
+              onClick={handleSubmit(handleCreateComment)}
+              className="w-full mt-2"
+            >
+              <div className="flex flex-col">
+                <div className="flex items-start">
+                  <div className="size-12 mr-3" />
+                  <div className="w-full">
+                    <Textarea
+                      required
+                      className="w-full bg-[#252528] border-[1px] text-white rounded-lg border-none resize-none h-24 p-3"
+                      {...register('content')}
+                      placeholder="Digite aqui..."
+                    />
+
+                    {errors.content && (
+                      <span className="text-xs text-rose-500">
+                        {errors.content.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end">
+                <Button
+                  size="sm"
+                  type="submit"
+                  disabled={isPending}
+                  className="bg-amigu hover:bg-amigu hover:brightness-75 text-zinc-200 flex items-center justify-end gap-2 mt-2 rounded"
+                >
+                  {isSubmitting || isPending ? (
+                    <div className="w-4 h-4 border-2 border-zinc-300/90 animate-spin border-t-amigu rounded-full" />
+                  ) : (
+                    <span className="flex items-center gap-2 text-xs">
+                      <SquareArrowOutUpRight className="size-3" />
+                      Publicar
+                    </span>
+                  )}
+                </Button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
-
-      {isOpen && (
-        <form onClick={handleSubmit(handleCreateComment)} className="mt-4">
-          <Textarea
-            required
-            className="  bg-[#252528] border-[1px] text-white rounded-lg border-none resize-none h-24 p-3"
-            {...register('content')}
-            placeholder="Digite aqui..."
-          />
-
-          {errors.content && (
-            <span className="text-xs text-rose-500">
-              {errors.content.message}
-            </span>
-          )}
-
-          <div className="flex justify-end">
-            <Button
-              size="sm"
-              type="submit"
-              disabled={isPending}
-              className="bg-amigu hover:bg-amigu hover:brightness-75 text-zinc-200 flex items-center justify-end gap-2 mt-2 rounded"
-            >
-              {isSubmitting || isPending ? (
-                <div className="w-4 h-4 border-2 border-zinc-300/90 animate-spin border-t-amigu rounded-full" />
-              ) : (
-                <span className="flex items-center gap-2 text-xs">
-                  <SquareArrowOutUpRight className="size-3" />
-                  Publicar
-                </span>
-              )}
-            </Button>
-          </div>
-        </form>
-      )}
     </div>
   )
 }

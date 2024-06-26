@@ -58,7 +58,6 @@ export function SideBar() {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors, isSubmitting },
   } = useForm<UpdateUserData>({
     resolver: zodResolver(updateUserSchema),
@@ -112,25 +111,6 @@ export function SideBar() {
   }
 
   const date = formatDate(getUserLoggedFn?.createdAt ?? '')
-
-  const { mutateAsync: UpdateActiveUserFn } = useMutation({
-    mutationKey: ['updateActiveUser'],
-    mutationFn: UpdateActiveUser,
-  })
-
-  useEffect(() => {
-    if (getUserLoggedFn) {
-      setValue('name', getUserLoggedFn.name)
-      setValue('username', getUserLoggedFn.username)
-      if (getUserLoggedFn.active) {
-        setIsOpen(true)
-
-        UpdateActiveUserFn({ userId: getUserLoggedFn.id })
-      } else {
-        setIsOpen(false)
-      }
-    }
-  }, [getUserLoggedFn])
 
   return (
     <>
