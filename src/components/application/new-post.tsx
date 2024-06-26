@@ -107,7 +107,7 @@ export function NewPost({ pending, user, refetch }: NewPostProps) {
                 onClick={() => setDialogOpen(!dialogOpen)}
                 className="w-full justify-start bg-[#252528] hover:bg-[#252528] hover:brightness-75 hover:cursor-text text-zinc-200 h-14 focus-visible:!ring-amigu focus-visible:ring-offset-0 border-none placeholder:text-zinc-200"
               >
-                Comece uma publicação
+                Comece uma publicação...
               </Button>
             </DialogTrigger>
             <DialogContent>
