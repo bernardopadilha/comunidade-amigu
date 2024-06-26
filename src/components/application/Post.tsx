@@ -184,7 +184,7 @@ export function Post({ userId, postId, content, publishedAt }: PostProps) {
       </header>
 
       {/* Content */}
-      <div className="md:px-10 px-5">
+      <div className="md:px-10 px-5 pb-6">
         {isPending ? (
           <>
             <Skeleton className="shrink-0 w-24 h-6 rounded-md" />
