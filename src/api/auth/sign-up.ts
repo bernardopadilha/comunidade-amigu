@@ -24,6 +24,7 @@ export async function signUp(signUpData: signUpProps) {
         email: signUpData.email,
         password: signUpData.password,
         username: username.toLowerCase(),
+        active: true,
       },
     ])
     .select()
