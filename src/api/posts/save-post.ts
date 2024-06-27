@@ -5,32 +5,30 @@ interface SaveAtPostProps {
   postId: number
 }
 
-export async function SavePost(credentials: SaveAtPostProps) {
+export async function SavePost({ userId, postId }: SaveAtPostProps) {
   const { data: saveAtPost, error: errorSave } = await supabase
     .from('saveAtPost')
     .select('*')
-    .eq('userId', credentials.userId)
-    .eq('postId', credentials.postId)
-
-  console.log(saveAtPost)
+    .eq('userId', userId)
+    .eq('postId', postId)
 
   if (errorSave) {
     throw new Error(errorSave.message)
   }
 
+  console.log(userId)
+
   if (saveAtPost && saveAtPost.length > 0) {
-    const like = saveAtPost[0]
+    const save = saveAtPost[0]
 
     const { error: errorDeleteSave } = await supabase
       .from('saveAtPost')
       .delete()
-      .eq('id', like.id)
+      .eq('id', save.id)
 
     if (errorDeleteSave) {
       throw new Error(errorDeleteSave.message)
     }
-
-    console.log('deletado')
     return
   }
 
@@ -38,8 +36,8 @@ export async function SavePost(credentials: SaveAtPostProps) {
     .from('saveAtPost')
     .insert([
       {
-        userId: credentials.userId,
-        postId: credentials.postId,
+        userId,
+        postId,
       },
     ])
     .select()

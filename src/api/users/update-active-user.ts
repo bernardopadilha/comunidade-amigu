@@ -18,8 +18,6 @@ export async function UpdateActiveUser({ userId }: UpdateUserProps) {
   }
 
   if (data) {
-    console.log(data.active)
-
     const { data: user, error } = await supabase
       .from('user')
       .update({

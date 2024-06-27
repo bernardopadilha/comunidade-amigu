@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { toast } from 'sonner'
+import { v4 } from 'uuid'
 
 export function DropzoneAvatar({
   setAvatarFiles,
@@ -57,7 +58,7 @@ export function DropzoneAvatar({
         style={
           imageUrl
             ? {
-                backgroundImage: `url(${imageUrl})`,
+                backgroundImage: `url(${imageUrl}?v=${v4()})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',

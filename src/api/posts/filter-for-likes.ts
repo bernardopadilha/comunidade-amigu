@@ -6,6 +6,8 @@ export async function filterForLikes(userId: string) {
     .select('*')
     .eq('userId', userId)
 
+  console.log(likeAtPost)
+
   if (error) {
     throw new Error(error.message)
   }
@@ -16,6 +18,9 @@ export async function filterForLikes(userId: string) {
     .from('post')
     .select('*')
     .in('id', postIds)
+    .order('createdAt', {
+      ascending: false,
+    })
 
   if (errorPosts) {
     throw new Error(errorPosts.message)

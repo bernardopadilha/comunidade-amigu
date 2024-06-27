@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
+import { v4 } from 'uuid'
 import { useState } from 'react'
 import { Cog } from 'lucide-react'
 import { Button } from '../ui/button'
@@ -14,25 +15,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { UpdateUserData, updateUserSchema } from '@/lib/zod/update-user.zod'
 import { Input } from '../ui/input'
+import { useForm } from 'react-hook-form'
 import { getUserLogged } from '@/api/auth/get-user'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { DropzoneAvatar } from './dropzone/dropzone-avatar'
-import { ThumbnailDropzone } from './dropzone/dropzone-thumbnail'
 import { UpdateUser } from '@/api/users/update-user'
-import { UpdateThumbnail } from '@/api/users/update-thumbnail'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { UpdateAvatar } from '@/api/users/update-avatar'
+import { DropzoneAvatar } from './dropzone/dropzone-avatar'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { UpdateThumbnail } from '@/api/users/update-thumbnail'
+import { ThumbnailDropzone } from './dropzone/dropzone-thumbnail'
+import { UpdateUserData, updateUserSchema } from '@/lib/zod/update-user.zod'
 
 export function SideBar() {
   const [isOpen, setIsOpen] = useState(false)
 
   const [avatarFiles, setAvatarFiles] = useState([])
   const [avatarAcceptedFiles, setAvatarAcceptedFiles] = useState([])
-
-  console.log(avatarFiles)
 
   const [thumbnailFiles, setThumbnailFiles] = useState([])
   const [thumbnailAcceptedFiles, setThumbnailAcceptedFiles] = useState([])
@@ -58,6 +57,7 @@ export function SideBar() {
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<UpdateUserData>({
@@ -122,7 +122,7 @@ export function SideBar() {
           <div className="relative">
             {getUserLoggedFn?.thumbnailUrl ? (
               <img
-                src={getUserLoggedFn?.thumbnailUrl}
+                src={`${getUserLoggedFn?.thumbnailUrl}?v=${v4()}`}
                 alt="banner"
                 className="w-full h-24 object-cover pointer-events-none select-none"
               />
@@ -131,7 +131,14 @@ export function SideBar() {
             )}
 
             {getUserLoggedFn && (
-              <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
+              <Dialog
+                open={isOpen}
+                onOpenChange={() => {
+                  setValue('name', getUserLoggedFn?.name)
+                  setValue('username', getUserLoggedFn?.username)
+                  setIsOpen(!isOpen)
+                }}
+              >
                 <DialogTrigger asChild>
                   <Button
                     size="icon"
@@ -203,6 +210,7 @@ export function SideBar() {
                     <div className="w-full sm:justify-end flex space-x-2">
                       <button
                         type="button"
+                        onClick={() => setIsOpen(false)}
                         disabled={isSubmitting}
                         className="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded"
                       >
@@ -235,7 +243,7 @@ export function SideBar() {
             <>
               {getUserLoggedFn?.avatarUrl ? (
                 <img
-                  src={getUserLoggedFn?.avatarUrl}
+                  src={`${getUserLoggedFn?.avatarUrl}?v=${v4()}`}
                   alt="Foto de perfil"
                   className="rounded-full w-28 h-28 relative -top-12 pointer-events-none select-none"
                 />

@@ -15,20 +15,19 @@ import {
 } from '@/components/ui/dialog'
 import { Textarea } from '../ui/textarea'
 import { useForm } from 'react-hook-form'
-import { getUserLogged, userLoggedProps } from '@/api/auth/get-user'
+import { getUserLogged } from '@/api/auth/get-user'
 import { SquareArrowOutUpRight } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createNewPost } from '@/api/posts/create-new-post'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { CreatePostData, createPostSchema } from '@/lib/zod/create-new-post.zod'
+import { v4 } from 'uuid'
 
 interface NewPostProps {
-  pending: boolean
-  user: userLoggedProps | undefined
   refetch: any
 }
 
-export function NewPost({ pending, user, refetch }: NewPostProps) {
+export function NewPost({ refetch }: NewPostProps) {
   const {
     reset,
     register,
@@ -56,6 +55,11 @@ export function NewPost({ pending, user, refetch }: NewPostProps) {
     },
   })
 
+  const { data: getUserLoggedFn, isPending: pendingUser } = useQuery({
+    queryKey: ['user'],
+    queryFn: getUserLogged,
+  })
+
   async function handleCreateNewPost(content: CreatePostData) {
     if (getUserFn) {
       const userId = getUserFn.id
@@ -69,33 +73,33 @@ export function NewPost({ pending, user, refetch }: NewPostProps) {
 
   return (
     <div className="bg-post/60 backdrop-blur-sm border-2 border-zinc-700 py-5 md:px-10 px-5 rounded-lg mb-8">
-      {pending ? (
+      {pendingUser ? (
         <Skeleton className="w-36 h-8" />
       ) : (
         <span className="text-lg font-medium text-zinc-100">Nova postagem</span>
       )}
       <div className="flex items-center gap-5 mt-3">
-        {pending ? (
+        {pendingUser ? (
           <Skeleton className="shrink-0 w-14 h-14 rounded-md" />
         ) : (
           <>
-            {user && user.avatarUrl ? (
+            {getUserLoggedFn && getUserLoggedFn.avatarUrl ? (
               <img
-                src={user.avatarUrl}
+                src={`${getUserLoggedFn.avatarUrl}?v=${v4()}`}
                 alt="Foto de perfil"
                 className="rounded-md w-14 h-14 pointer-events-none select-none"
               />
             ) : (
               <div className="w-16 h-14 rounded-md flex items-center justify-center bg-[#252528]">
                 <span className="text-lg font-semibold">
-                  {user?.name.charAt(0).toUpperCase()}
+                  {getUserLoggedFn?.name.charAt(0).toUpperCase()}
                 </span>
               </div>
             )}
           </>
         )}
 
-        {pending ? (
+        {pendingUser ? (
           <Skeleton className="w-full h-14 rounded-md" />
         ) : (
           <Dialog

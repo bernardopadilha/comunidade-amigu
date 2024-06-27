@@ -32,7 +32,7 @@ export function Header({ pending }: HeaderProps) {
 
   return (
     <header className="w-full fixed top-0 left-0 z-50 h-16 bg-header bg-post backdrop-blur-sm border-b-2 border-b-zinc-700 flex items-center justify-center px-0">
-      <div className="max-w-[1420px] w-full mx-auto flex items-center justify-between px-2">
+      <div className="max-w-[90rem] w-full mx-auto flex items-center justify-between px-2">
         <div className="flex items-center gap-3">
           {pending ? (
             <Skeleton className="h-10 w-10" />

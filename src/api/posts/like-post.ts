@@ -5,17 +5,19 @@ interface LikeAtPostProps {
   postId: number
 }
 
-export async function LikePost(credentials: LikeAtPostProps) {
+export async function LikePost({ userId, postId }: LikeAtPostProps) {
+  // Verifica se já existe uma curtida do usuário no post
   const { data: likeAtPost, error: errorLike } = await supabase
     .from('likeAtPost')
     .select('*')
-    .eq('userId', credentials.userId)
-    .eq('postId', credentials.postId)
+    .eq('userId', userId)
+    .eq('postId', postId)
 
   if (errorLike) {
     throw new Error(errorLike.message)
   }
 
+  // Se a curtida já existe, exclui a curtida
   if (likeAtPost && likeAtPost.length > 0) {
     const like = likeAtPost[0]
 
@@ -27,15 +29,17 @@ export async function LikePost(credentials: LikeAtPostProps) {
     if (errorDeleteLike) {
       throw new Error(errorDeleteLike.message)
     }
-    return
+
+    return { message: 'Like removed' } // Retorna uma mensagem indicando que a curtida foi removida
   }
 
+  // Caso contrário, insere uma nova curtida
   const { data, error } = await supabase
     .from('likeAtPost')
     .insert([
       {
-        userId: credentials.userId,
-        postId: credentials.postId,
+        userId,
+        postId,
       },
     ])
     .select()

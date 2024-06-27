@@ -27,7 +27,5 @@ export async function FindAllComments({
 
   const comments = data.filter((comment) => !comment.parentCommentId)
 
-  console.log(comments)
-
   return comments
 }

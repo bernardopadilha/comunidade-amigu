@@ -164,7 +164,7 @@ export function Comment({
         <>
           {GetUserCommentsByIdFn && GetUserCommentsByIdFn.avatarUrl ? (
             <img
-              src={GetUserCommentsByIdFn.avatarUrl}
+              src={`${GetUserCommentsByIdFn.avatarUrl}?v=${v4()}`}
               alt="Foto de perfil"
               className="rounded-md w-16 h-16"
             />

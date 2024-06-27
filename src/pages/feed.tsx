@@ -1,16 +1,16 @@
+import { useState } from 'react'
 import { Post } from '@/components/application/Post'
 import { Header } from '@/components/application/Header'
 import { News } from '@/components/application/amigu-news'
 
-import { SideBar } from '@/components/application/SideBar'
 import { useQuery } from '@tanstack/react-query'
 import { getUserLogged } from '@/api/auth/get-user'
-import { NewPost } from '@/components/application/new-post'
 import { FindAllPosts } from '@/api/posts/find-all-posts'
+import { SideBar } from '@/components/application/SideBar'
+import { NewPost } from '@/components/application/new-post'
 import { HeroHighlight } from '@/components/ui/hero-highlight'
 import { filterForLikes } from '@/api/posts/filter-for-likes'
 import { filterForSaves } from '@/api/posts/filter-for-saves'
-import { useState } from 'react'
 
 export function Feed() {
   const [filteredAtLikes] = useState(false)
@@ -70,11 +70,7 @@ export function Feed() {
           </div>
 
           <main className="w-full flex-1">
-            <NewPost
-              refetch={refetch}
-              pending={isPending}
-              user={getUserLoggedFn}
-            />
+            <NewPost refetch={refetch} />
 
             {FindAllPostsFn &&
               (filteredAtLikes && filterForLikesFn
@@ -82,9 +78,10 @@ export function Feed() {
                     <Post
                       key={post.id}
                       postId={post.id}
+                      refetchPosts={refetch}
                       userId={post.userId}
                       content={post.content}
-                      publishedAt={post.createdAt} // Use created_at conforme o retorno da função
+                      publishedAt={post.createdAt}
                     />
                   ))
                 : filteredAtSaves && filterForSavesFn
@@ -92,18 +89,20 @@ export function Feed() {
                       <Post
                         key={post.id}
                         postId={post.id}
+                        refetchPosts={refetch}
                         userId={post.userId}
                         content={post.content}
-                        publishedAt={post.createdAt} // Use created_at conforme o retorno da função
+                        publishedAt={post.createdAt}
                       />
                     ))
                   : FindAllPostsFn.map((post) => (
                       <Post
                         key={post.id}
                         postId={post.id}
+                        refetchPosts={refetch}
                         userId={post.userId}
                         content={post.content}
-                        publishedAt={post.createdAt} // Use created_at conforme o retorno da função
+                        publishedAt={post.createdAt}
                       />
                     )))}
           </main>

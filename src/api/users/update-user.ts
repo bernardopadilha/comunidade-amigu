@@ -16,11 +16,22 @@ export async function UpdateUser({
   avatarUrl,
   thumbnailUrl,
 }: UpdateUserProps) {
+  const { data: userInfo, error: errorUser } = await supabase
+    .from('user')
+    .select('*')
+    .eq('id', userId)
+    .single()
+
+  if (errorUser) {
+    throw new Error(errorUser.message)
+  }
+
   const { data, error } = await supabase
     .from('user')
     .update({
-      avatarUrl,
-      thumbnailUrl,
+      avatarUrl: avatarUrl === null ? userInfo.avatarUrl : avatarUrl,
+      thumbnailUrl:
+        thumbnailUrl === null ? userInfo.thumbnailUrl : thumbnailUrl,
       name: userData.name,
       username: userData.username,
     })

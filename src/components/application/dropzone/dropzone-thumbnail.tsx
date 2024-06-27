@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getUserLogged } from '@/api/auth/get-user'
@@ -9,6 +8,7 @@ import { PencilIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { toast } from 'sonner'
+import { v4 } from 'uuid'
 
 export function ThumbnailDropzone({
   setThumbnailFiles,
@@ -55,14 +55,15 @@ export function ThumbnailDropzone({
     ? URL.createObjectURL(acceptedFiles[0])
     : getUserLoggedFn?.thumbnailUrl
 
+  console.log(imageUrl)
   return (
     <section className="w-full">
       <div
         {...getRootProps({ className: 'dropzone' })}
         style={
-          imageUrl
+          getUserLoggedFn?.thumbnailUrl
             ? {
-                backgroundImage: `url(${imageUrl})`,
+                backgroundImage: `url(${imageUrl}?v=${v4()})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
